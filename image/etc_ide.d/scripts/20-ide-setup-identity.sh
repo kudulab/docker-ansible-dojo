@@ -41,3 +41,5 @@ IdentityFile ${ide_home}/.ssh/id_rsa
 if [ -f "${ide_identity}/.gitconfig" ]; then
   cp "${ide_identity}/.gitconfig" "${ide_home}"
 fi
+
+chown ide:ide -R /etc/ansible

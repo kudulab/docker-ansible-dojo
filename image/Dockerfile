@@ -34,7 +34,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     easy_install -U pip    && \
     \
     pip install --upgrade cffi pywinrm              && \
-    pip install --upgrade pyyaml jinja2 pycrypto    && \
+    pip install --upgrade pyyaml jinja2 pycrypto tox  && \
     \
     \
     echo "===> Downloading Ansible's source tree..."            && \
@@ -55,13 +55,10 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     \
     \
     echo "===> Installing handy tools (not absolutely required)..."  && \
-
-    apt-get install -y sshpass openssh-client  && \
+    apt-get install -y sshpass openssh-client nano wget curl && \
     \
     \
     echo "===> Clean up..."                                                  && \
-    apt-get remove -y --auto-remove \
-            build-essential python-pip python-dev libffi-dev libssl-dev  && \
     apt-get clean                                                            && \
     rm -rf /var/lib/apt/lists/*                                              && \
     \
@@ -72,6 +69,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
 
 
 COPY etc_ide.d/scripts/* /etc/ide.d/scripts/
+COPY ansible.cfg /etc/ansible/
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 CMD ["/bin/bash"]
