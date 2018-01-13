@@ -77,3 +77,7 @@ CMD ["/bin/bash"]
 # ensure pretty bash prompt and env. variables are set
 COPY bashrc /home/ide/.bashrc
 COPY profile /home/ide/.profile
+
+ARG this_image_tag_arg
+ARG this_image_name_arg
+ENV this_image_tag=${this_image_tag_arg} this_image_name=${this_image_name_arg}
