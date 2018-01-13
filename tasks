@@ -13,7 +13,8 @@ source ./docker-ops
 releaser_init
 
 image_name_no_registry="ansibleide"
-image_name="docker-registry.base.ai-traders.com/${image_name_no_registry}"
+image_name="docker-registry.ai-traders.com/${image_name_no_registry}"
+base_image_name="docker-registry.base.ai-traders.com/${image_name_no_registry}"
 image_dir="./image"
 imagerc_filename="imagerc"
 
@@ -56,6 +57,33 @@ case "${command}" in
       old_version=$(get_next_oversion)
       next_version=$(bump_patch_version "${old_version}")
       set_next_oversion "${next_version}"
+      exit $?
+      ;;
+  publish_base)
+      source_imagerc "${image_dir}"  "${imagerc_filename}"
+      production_image_tag=$(get_last_version_from_changelog "${changelog_file}")
+      testing_image_tag="${AIT_DOCKER_IMAGE_TAG}"
+
+      log_info "testing_image_tag set to: ${testing_image_tag}"
+      log_info "production_image_tag set to: ${production_image_tag}"
+      if ! docker images ${AIT_DOCKER_IMAGE_NAME} | awk '{print $2}' | grep ${testing_image_tag} 1>/dev/null ; then
+        # if docker image does not exist locally, then "docker tag" will fail,
+        # so pull it. However, do not always pull it, the image may be not pushed
+        # and only available locally.
+        set -x -e
+        docker pull "${AIT_DOCKER_IMAGE_NAME}:${testing_image_tag}"
+      fi
+      set -x -e
+      # When tagging a docker image using docker 1.8.3, we can use `docker tag -f`.
+      # When using docker 1.12, there is no `-f` option, but `docker tag`
+      # always works as if force was used.
+      docker tag -f "${AIT_DOCKER_IMAGE_NAME}:${testing_image_tag}" "${base_image_name}:${production_image_tag}" || docker tag "${AIT_DOCKER_IMAGE_NAME}:${testing_image_tag}" "${base_image_name}:${production_image_tag}"
+      docker tag -f "${AIT_DOCKER_IMAGE_NAME}:${testing_image_tag}" "${base_image_name}:latest" || docker tag "${AIT_DOCKER_IMAGE_NAME}:${testing_image_tag}" "${base_image_name}:latest"
+      if [[ "${dryrun}" != "true" ]];then
+        docker push "${base_image_name}:${production_image_tag}"
+        docker push "${base_image_name}:latest"
+      fi
+      set +x +e
       exit $?
       ;;
   publish)
