@@ -16,6 +16,25 @@ RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 0527A9B7 \
  && gpg --verify /tini.asc && mv /tini /usr/bin/tini && chmod +x /usr/bin/tini &&\
  rm /tini.asc
 
+RUN apt-get update -y  &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y \
+     apt-transport-https \
+     ca-certificates \
+     curl \
+     gnupg2 \
+     software-properties-common &&\
+     rm -rf /var/lib/apt/lists/* && rm -rf /tmp/* /var/tmp/*
+
+# docker client is needed by ansible docker connector
+RUN /bin/bash -c "curl -fsSL https://download.docker.com/linux/debian/gpg | apt-key add -" &&\
+  echo "deb [arch=amd64] https://download.docker.com/linux/debian jessie stable edge" > /etc/apt/sources.list.d/docker.list &&\
+  apt-get update &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends\
+  docker-ce=17.12.0~ce-0~debian &&\
+  rm -Rf /var/lib/docker/* &&\
+  rm -rf /var/lib/apt/lists/* && rm -rf /tmp/* /var/tmp/* &&\
+  rm -rf /etc/ssh/ssh_host*
+
 # Ansible installing based on https://github.com/William-Yeh/docker-ansible/blob/master/master-debian8/Dockerfile
 ENV ANSIBLE_BRANCH_VERSION=stable-2.4
 RUN echo "===> Adding Ansible's prerequisites..."         && \
@@ -34,7 +53,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     easy_install -U pip    && \
     \
     pip install --upgrade cffi pywinrm              && \
-    pip install --upgrade pyyaml jinja2 pycrypto tox  && \
+    pip install --upgrade pyyaml jinja2 pycrypto tox python-openstackclient && \
     \
     \
     echo "===> Downloading Ansible's source tree..."            && \
@@ -66,7 +85,6 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     echo "===> Adding hosts for convenience..."  && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
-
 
 COPY etc_ide.d/scripts/* /etc/ide.d/scripts/
 COPY ansible.cfg /etc/ansible/
