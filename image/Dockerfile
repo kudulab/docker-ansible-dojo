@@ -2,10 +2,12 @@ FROM debian:jessie
 
 COPY apt_01proxy /etc/apt/apt.conf.d/01_proxy
 
+# Install image scripts and ide frontend to use
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
   git clone --depth 1 -b 0.10.2 https://github.com/ai-traders/ide.git /tmp/ide_git && \
   /tmp/ide_git/ide_image_scripts/src/install.sh && \
+  /tmp/ide_git/local_install.sh &&\
   rm -r /tmp/ide_git && \
   echo 'ide ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
@@ -53,7 +55,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     easy_install -U pip    && \
     \
     pip install --upgrade cffi pywinrm              && \
-    pip install --upgrade pyyaml jinja2 pycrypto tox python-openstackclient && \
+    pip install --upgrade pyyaml jinja2 pycrypto tox python-openstackclient yasha && \
     \
     \
     echo "===> Downloading Ansible's source tree..."            && \
@@ -88,6 +90,12 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
 
 COPY etc_ide.d/scripts/* /etc/ide.d/scripts/
 COPY ansible.cfg /etc/ansible/
+
+# Install bats
+RUN git clone --depth 1 https://github.com/sstephenson/bats.git /opt/bats &&\
+  git clone --depth 1 https://github.com/ztombol/bats-support.git /opt/bats-support &&\
+  git clone --depth 1 https://github.com/ztombol/bats-assert.git /opt/bats-assert &&\
+  /opt/bats/install.sh /usr/local
 
 ENTRYPOINT ["/usr/bin/entrypoint.sh"]
 CMD ["/bin/bash"]
