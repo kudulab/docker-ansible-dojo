@@ -1,3 +1,7 @@
+### 0.3.0 (2018-Mar-18)
+
+ * updated ansible to 2.5
+
 ### 0.2.1 (2018-Feb-16)
 
  * added bats

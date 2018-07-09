@@ -38,7 +38,7 @@ RUN /bin/bash -c "curl -fsSL https://download.docker.com/linux/debian/gpg | apt-
   rm -rf /etc/ssh/ssh_host*
 
 # Ansible installing based on https://github.com/William-Yeh/docker-ansible/blob/master/master-debian8/Dockerfile
-ENV ANSIBLE_BRANCH_VERSION=stable-2.4
+ENV ANSIBLE_BRANCH_VERSION=stable-2.5
 RUN echo "===> Adding Ansible's prerequisites..."         && \
     apt-get update -y  &&  apt-get install --fix-missing  && \
     DEBIAN_FRONTEND=noninteractive  \
