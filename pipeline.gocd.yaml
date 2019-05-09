@@ -1,11 +1,13 @@
+format_version: 3
 pipelines:
-  docker-ansibleide:
+  docker-ansible-dojo:
     group: platform
     label_template: "${git[:8]}"
     materials:
       git:
-        git: "git@git.ai-traders.com:platform/docker-ansibleide.git"
-        branch: master
+        type: configrepo
+    secure_variables:
+      VAULT_TOKEN: "AES:NCZ6V7tBrCRrVqL2E0dzhQ==:bOAEL5SRVgrDUAcMJ9EX+OGDnw9sZXJDcrT1psHZtwyAgm3dq3XUdronVkt/Nhw+"
     stages:
       - build:
           clean_workspace: true
@@ -22,12 +24,7 @@ pipelines:
                     command: /bin/bash
                     arguments:
                       - -c
-                      - ./tasks verify_version
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ops_docker_push=true ./tasks build
+                      - ./tasks build
       - itest:
           clean_workspace: true
           jobs:
@@ -63,22 +60,7 @@ pipelines:
       - publish:
           clean_workspace: true
           jobs:
-            base:
-              resources:
-                - docker_builder
-              tasks:
-                - fetch:
-                    stage: build
-                    job: docker_image
-                    is_file: yes
-                    source: imagerc
-                    destination: image/
-                - exec:
-                    command: /bin/bash
-                    arguments:
-                      - -c
-                      - ./tasks publish_base
-            top:
+            image:
               resources:
                 - docker_builder
               tasks:

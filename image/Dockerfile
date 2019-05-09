@@ -1,22 +1,17 @@
 FROM debian:jessie
 
-COPY apt_01proxy /etc/apt/apt.conf.d/01_proxy
-
-# Install image scripts and ide frontend to use
+# Install image scripts and dojo frontend to use
+ENV DOJO_VERSION=0.5.0
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
-  git clone --depth 1 -b 0.10.2 https://github.com/ai-traders/ide.git /tmp/ide_git && \
-  /tmp/ide_git/ide_image_scripts/src/install.sh && \
-  /tmp/ide_git/local_install.sh &&\
-  rm -r /tmp/ide_git && \
-  echo 'ide ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
+  git clone --depth 1 -b ${DOJO_VERSION} https://github.com/ai-traders/dojo.git /tmp/dojo_git &&\
+  /tmp/dojo_git/image_scripts/src/install.sh && \
+  rm -r /tmp/dojo_git &&\
+  echo 'dojo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-ENV TINI_VERSION v0.9.0
+ENV TINI_VERSION v0.18.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini.asc /tini.asc
-RUN gpg --keyserver ha.pool.sks-keyservers.net --recv-keys 0527A9B7 \
- && gpg --verify /tini.asc && mv /tini /usr/bin/tini && chmod +x /usr/bin/tini &&\
- rm /tini.asc
+RUN mv /tini /usr/bin/tini && chmod +x /usr/bin/tini
 
 RUN apt-get update -y  &&\
   DEBIAN_FRONTEND=noninteractive apt-get install -y \
@@ -32,13 +27,13 @@ RUN /bin/bash -c "curl -fsSL https://download.docker.com/linux/debian/gpg | apt-
   echo "deb [arch=amd64] https://download.docker.com/linux/debian jessie stable edge" > /etc/apt/sources.list.d/docker.list &&\
   apt-get update &&\
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends\
-  docker-ce=17.12.0~ce-0~debian &&\
+  docker-ce=18.06.3~ce~3-0~debian &&\
   rm -Rf /var/lib/docker/* &&\
   rm -rf /var/lib/apt/lists/* && rm -rf /tmp/* /var/tmp/* &&\
   rm -rf /etc/ssh/ssh_host*
 
 # Ansible installing based on https://github.com/William-Yeh/docker-ansible/blob/master/master-debian8/Dockerfile
-ENV ANSIBLE_BRANCH_VERSION=stable-2.5
+ENV ANSIBLE_BRANCH_VERSION=stable-2.8
 RUN echo "===> Adding Ansible's prerequisites..."         && \
     apt-get update -y  &&  apt-get install --fix-missing  && \
     DEBIAN_FRONTEND=noninteractive  \
@@ -59,7 +54,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     \
     \
     echo "===> Downloading Ansible's source tree..."            && \
-    git clone --branch ${ANSIBLE_BRANCH_VERSION} git://github.com/ansible/ansible.git --recursive  && \
+    git clone --branch ${ANSIBLE_BRANCH_VERSION} --depth 1 git://github.com/ansible/ansible.git --recursive  && \
     \
     \
     echo "===> Compiling Ansible..."      && \
@@ -88,7 +83,7 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
 
-COPY etc_ide.d/scripts/* /etc/ide.d/scripts/
+COPY etc_dojo.d/scripts/* /etc/dojo.d/scripts/
 COPY ansible.cfg /etc/ansible/
 
 # Install bats
@@ -97,13 +92,9 @@ RUN git clone --depth 1 https://github.com/sstephenson/bats.git /opt/bats &&\
   git clone --depth 1 https://github.com/ztombol/bats-assert.git /opt/bats-assert &&\
   /opt/bats/install.sh /usr/local
 
-ENTRYPOINT ["/usr/bin/entrypoint.sh"]
+ENTRYPOINT ["/usr/bin/tini", "-g", "--", "/usr/bin/entrypoint.sh"]
 CMD ["/bin/bash"]
 
 # ensure pretty bash prompt and env. variables are set
-COPY bashrc /home/ide/.bashrc
-COPY profile /home/ide/.profile
-
-ARG this_image_tag_arg
-ARG this_image_name_arg
-ENV this_image_tag=${this_image_tag_arg} this_image_name=${this_image_name_arg}
+COPY bashrc /home/dojo/.bashrc
+COPY profile /home/dojo/.profile
