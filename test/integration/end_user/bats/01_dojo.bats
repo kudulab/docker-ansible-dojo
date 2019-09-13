@@ -12,8 +12,8 @@ load '/opt/bats-assert/load.bash'
 }
 
 @test "can git clone from github" {
-  run /bin/bash -c "dojo -c Dojofile.to_be_tested \"rm -rf kolla &&\
-    git clone git@github.com:ai-traders/kolla.git\""
-  assert_output --partial "Cloning into 'kolla'..."
+  run /bin/bash -c "dojo -c Dojofile.to_be_tested \"rm -rf dojo-git-repo &&\
+    git clone https://github.com/kudulab/dojo.git dojo-git-repo\""
+  assert_output --partial "Cloning into 'dojo-git-repo'..."
   assert_equal "$status" 0
 }

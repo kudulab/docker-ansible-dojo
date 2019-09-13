@@ -1,3 +1,6 @@
+* fix tests so that they are actually run
+* fix tests so that they pass
+
 ### 1.0.0 (2019-May-09)
 
  * prepare for public usage, push to `kudulab/ansible-dojo`
