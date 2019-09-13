@@ -83,6 +83,10 @@ RUN echo "===> Adding Ansible's prerequisites..."         && \
     mkdir -p /etc/ansible                        && \
     echo 'localhost' > /etc/ansible/hosts
 
+# Allow Ansible to support docker related modules
+RUN pip install docker==4.0.2 &&\
+  usermod -a -G docker dojo
+
 COPY etc_dojo.d/scripts/* /etc/dojo.d/scripts/
 COPY ansible.cfg /etc/ansible/
 
