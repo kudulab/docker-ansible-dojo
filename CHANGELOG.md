@@ -2,6 +2,7 @@
 * fix tests so that they pass
 * allow Ansible to support docker related modules - install python docker sdk
  and add user dojo to group docker
+* use newer base image: debian:10.1-slim
 
 ### 1.0.0 (2019-May-09)
 
