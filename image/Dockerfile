@@ -1,7 +1,7 @@
 FROM debian:10.1-slim
 
 # Install image scripts and dojo frontend to use
-ENV DOJO_VERSION=0.5.0
+ENV DOJO_VERSION=0.6.0
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
   git clone --depth 1 -b ${DOJO_VERSION} https://github.com/kudulab/dojo.git /tmp/dojo_git &&\

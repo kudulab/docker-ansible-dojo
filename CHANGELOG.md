@@ -3,6 +3,7 @@
 * allow Ansible to support docker related modules - install python docker sdk
  and add user dojo to group docker
 * use newer base image: debian:10.1-slim
+* use dojo scripts from Dojo 0.6.0
 
 ### 1.0.0 (2019-May-09)
 
