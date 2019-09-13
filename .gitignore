@@ -6,3 +6,4 @@
 /test/integration/test_dojo_work/kolla/
 /ops/
 Dojofile.example
+dojo-git-repo

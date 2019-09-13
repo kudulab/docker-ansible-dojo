@@ -66,6 +66,8 @@ case "${command}" in
       echo "DOJO_DOCKER_IMAGE=\"${KUDU_DOCKER_IMAGE_URL}\"" > ./Dojofile.to_be_tested
       echo "DOJO_IDENTITY_OUTER=\"$(pwd)/test/integration/identities/full\"" >> ./Dojofile.to_be_tested
       echo "DOJO_WORK_OUTER=$(pwd)/test/integration/test_dojo_work" >> ./Dojofile.to_be_tested
+      # needed for docker daemon
+      echo "DOJO_DOCKER_OPTIONS=--privileged" >> ./Dojofile.to_be_tested
       time bats "$(pwd)/test/integration/end_user/bats"
       ;;
   example)
@@ -74,6 +76,11 @@ case "${command}" in
       echo "DOJO_DOCKER_IMAGE=\"${KUDU_DOCKER_IMAGE_URL}\"" > ./Dojofile.example
       echo "DOJO_IDENTITY_OUTER=\"$(pwd)/test/integration/identities/full\"" >> ./Dojofile.example
       echo "DOJO_WORK_OUTER=$(pwd)/test/integration/test_dojo_work" >> ./Dojofile.example
+      # in order to test the Ansible module: docker_container, we need this line
+      # below, but it leads to permissions errors when cleaning the docker-volume-test dir
+      # echo "DOJO_DOCKER_OPTIONS=--privileged -v ${PWD}/docker-volume-test dir:/var/lib/docker" >> ./Dojofile.example
+      # We can, however, just test the docker_image module using just this:
+      echo "DOJO_DOCKER_OPTIONS=--privileged" >> ./Dojofile.example
       dojo -c ./Dojofile.example
       ;;
   release)

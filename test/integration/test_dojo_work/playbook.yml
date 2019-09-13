@@ -1,0 +1,10 @@
+---
+# This playbook runs some simple tasks
+
+- hosts: myservers
+  remote_user: root
+  become: yes
+  become_method: sudo
+
+  roles:
+    - docker

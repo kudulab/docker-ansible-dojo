@@ -1,0 +1,5 @@
+---
+- name: Pull a docker image
+  docker_image:
+    name: alpine:3.8
+    source: pull
