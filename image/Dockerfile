@@ -65,9 +65,17 @@ RUN echo "===> Installing python, sudo, and supporting tools..."  && \
 # Allow Ansible to support docker related modules
 RUN pip uninstall backports.ssl-match-hostname --yes &&\
   apt-get update &&\
-  apt-get install python-backports.ssl-match-hostname &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends python-backports.ssl-match-hostname &&\
+  apt-get clean  &&\
+  rm -rf /var/lib/apt/lists/*  /tmp/*  &&\
   pip install docker==4.0.2 &&\
   usermod -a -G docker dojo
+
+# Install handy tools
+RUN apt-get update &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nano wget &&\
+  apt-get clean  &&\
+  rm -rf /var/lib/apt/lists/*  /tmp/*
 
 COPY etc_dojo.d/scripts/* /etc/dojo.d/scripts/
 COPY ansible.cfg /etc/ansible/
