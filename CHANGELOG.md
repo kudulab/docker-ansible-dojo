@@ -1,3 +1,5 @@
+### 1.1.0 (2019-Sep-13)
+
 * fix tests so that they are actually run
 * fix tests so that they pass
 * allow Ansible to support docker related modules - install python docker sdk
