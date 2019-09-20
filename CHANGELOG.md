@@ -1,3 +1,7 @@
+### 1.2.0 (2019-Sep-20)
+
+* install tools to lint test Ansible playbooks: ansible-lint, yamllint
+
 ### 1.1.0 (2019-Sep-13)
 
 * fix tests so that they are actually run

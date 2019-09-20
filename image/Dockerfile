@@ -77,6 +77,9 @@ RUN apt-get update &&\
   apt-get clean  &&\
   rm -rf /var/lib/apt/lists/*  /tmp/*
 
+# Install tools to test Ansible playbooks
+RUN pip install ansible-lint yamllint
+
 COPY etc_dojo.d/scripts/* /etc/dojo.d/scripts/
 COPY ansible.cfg /etc/ansible/
 

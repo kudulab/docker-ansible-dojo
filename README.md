@@ -29,6 +29,8 @@ DOJO_DOCKER_IMAGE="kudulab/ansible-dojo:1.0.0"
 ansible-playbook ansible/site.yml -i inventory/myinv.yml --tags web
 ansible-doc file
 ansible all -m ping -i inventory/myinv.yml
+ansible-lint -x idempotency playbook.yml
+yamllint .
 ```
 
 By default, current directory in docker container is `/dojo/work`.
