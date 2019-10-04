@@ -8,6 +8,7 @@ In ansible terms, this provides the controller environment.
  * Ansible `2.8` is installed from git source. So it is easy to fork and patch.
  * docker CLI for ansible docker connector to work
  * bats for minimal testing support
+ * Make
 
 ## Usage
 1. [Install docker](https://docs.docker.com/install/), if you haven't already.

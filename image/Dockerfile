@@ -73,7 +73,7 @@ RUN pip uninstall backports.ssl-match-hostname --yes &&\
 
 # Install handy tools
 RUN apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nano wget &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nano wget build-essential &&\
   apt-get clean  &&\
   rm -rf /var/lib/apt/lists/*  /tmp/*
 

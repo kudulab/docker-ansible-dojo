@@ -1,3 +1,7 @@
+### 1.3.0 (2019-Oct-04)
+
+* add Make to specification (explicitly install it and add a test)
+
 ### 1.2.0 (2019-Sep-20)
 
 * install tools to lint test Ansible playbooks: ansible-lint, yamllint
