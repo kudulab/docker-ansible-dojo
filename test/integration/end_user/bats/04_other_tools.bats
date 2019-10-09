@@ -6,3 +6,9 @@ load '/opt/bats-assert/load.bash'
   assert_output --partial "GNU Make 4"
   assert_equal "$status" 0
 }
+
+@test "rsync is installed" {
+  run /bin/bash -c "dojo -c Dojofile.to_be_tested \"rsync --version\""
+  assert_output --partial "rsync"
+  assert_equal "$status" 0
+}

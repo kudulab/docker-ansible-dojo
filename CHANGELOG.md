@@ -1,3 +1,7 @@
+### 1.4.0 (2019-Oct-09)
+
+ * Added rsync so that ansible can sync directories from control host to remotes
+
 ### 1.3.0 (2019-Oct-04)
 
 * add Make to specification (explicitly install it and add a test)

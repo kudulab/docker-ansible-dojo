@@ -1,7 +1,7 @@
 FROM debian:10.1-slim
 
 # Install image scripts and dojo frontend to use
-ENV DOJO_VERSION=0.6.0
+ENV DOJO_VERSION=0.6.2
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
   git clone --depth 1 -b ${DOJO_VERSION} https://github.com/kudulab/dojo.git /tmp/dojo_git &&\
@@ -73,7 +73,7 @@ RUN pip uninstall backports.ssl-match-hostname --yes &&\
 
 # Install handy tools
 RUN apt-get update &&\
-  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nano wget build-essential &&\
+  DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends nano wget build-essential rsync &&\
   apt-get clean  &&\
   rm -rf /var/lib/apt/lists/*  /tmp/*
 
