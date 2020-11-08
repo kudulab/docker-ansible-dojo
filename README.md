@@ -15,14 +15,14 @@ In ansible terms, this provides the controller environment.
 2. Install [Dojo](https://github.com/kudulab/dojo#installation) it is a self-contained binary, so just place it somewhere on the `PATH`.
 On **Linux**:
 ```bash
-DOJO_VERSION=0.5.0
+DOJO_VERSION=0.10.2
 wget -O dojo https://github.com/kudulab/dojo/releases/download/${DOJO_VERSION}/dojo_linux_amd64
 sudo mv dojo /usr/local/bin
 sudo chmod +x /usr/local/bin/dojo
 ```
 3. Provide a Dojofile:
 ```
-DOJO_DOCKER_IMAGE="kudulab/ansible-dojo:1.0.0"
+DOJO_DOCKER_IMAGE="kudulab/ansible-dojo:1.5.0"
 ```
 4. Create and enter the container by running `dojo` at the root of project.
 5. Work with ansible as usual:
@@ -50,7 +50,7 @@ sudo service docker start
 
 ## License
 
-Copyright 2019 Ewa Czechowska, Tomasz Sętkowski
+Copyright 2019-2020 Ewa Czechowska, Tomasz Sętkowski
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

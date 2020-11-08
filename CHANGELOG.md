@@ -1,3 +1,9 @@
+### 1.5.0 (2020-Nov-08)
+
+* Ansible 2.10.3
+* Set Ansible default interpreter to python3
+* Use Dojo image scripts 0.10.2
+
 ### 1.4.0 (2019-Oct-09)
 
  * Added rsync so that ansible can sync directories from control host to remotes

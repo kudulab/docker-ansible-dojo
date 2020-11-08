@@ -1,7 +1,7 @@
-FROM debian:10.1-slim
+FROM debian:10.6-slim
 
-# Install image scripts and dojo frontend to use
-ENV DOJO_VERSION=0.6.2
+# Install image scripts and dojo
+ENV DOJO_VERSION=0.10.2
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
   git clone --depth 1 -b ${DOJO_VERSION} https://github.com/kudulab/dojo.git /tmp/dojo_git &&\
@@ -37,15 +37,15 @@ RUN echo "===> Installing python, sudo, and supporting tools..."  && \
     apt-get update -y  &&  apt-get install --fix-missing          && \
     DEBIAN_FRONTEND=noninteractive         \
     apt-get install -y                     \
-        python python-yaml sudo            \
-        curl gcc python-pip python-dev libffi-dev libssl-dev  && \
-    apt-get -y --purge remove python-cffi          && \
-    pip install --upgrade pycrypto cffi pywinrm    && \
+        python3 python3-yaml sudo            \
+        curl gcc python3-pip python3-dev libffi-dev libssl-dev  && \
+    apt-get -y --purge remove python3-cffi          && \
+    pip3 install --upgrade pycrypto cffi pywinrm    && \
     \
     \
     \
     echo "===> Installing Ansible..."   && \
-    pip install ansible                 && \
+    pip3 install ansible==2.10.3         && \
     \
     \
     \
@@ -63,12 +63,12 @@ RUN echo "===> Installing python, sudo, and supporting tools..."  && \
     echo 'localhost' > /etc/ansible/hosts
 
 # Allow Ansible to support docker related modules
-RUN pip uninstall backports.ssl-match-hostname --yes &&\
+RUN pip3 uninstall backports.ssl-match-hostname --yes &&\
   apt-get update &&\
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends python-backports.ssl-match-hostname &&\
   apt-get clean  &&\
   rm -rf /var/lib/apt/lists/*  /tmp/*  &&\
-  pip install docker==4.0.2 &&\
+  pip3 install docker==4.3.1 &&\
   usermod -a -G docker dojo
 
 # Install handy tools
@@ -78,7 +78,7 @@ RUN apt-get update &&\
   rm -rf /var/lib/apt/lists/*  /tmp/*
 
 # Install tools to test Ansible playbooks
-RUN pip install ansible-lint yamllint
+RUN pip3 install ansible-lint yamllint
 
 COPY etc_dojo.d/scripts/* /etc/dojo.d/scripts/
 COPY ansible.cfg /etc/ansible/
