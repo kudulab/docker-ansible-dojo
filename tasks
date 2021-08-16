@@ -32,6 +32,11 @@ image_dir="./image"
 imagerc_filename="imagerc"
 
 function docker_login {
+  if [ -n "$DOCKERHUB_TOKEN" ]; then
+    echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+    return
+  fi
+  echo "Warning: docker environment variables not found: falling back to Vault for authentication." >&2
   vault_user_path=$USER
   if [ $vault_user_path == "go" ]; then
     vault_user_path="gocd"
