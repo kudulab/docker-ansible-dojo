@@ -1,3 +1,9 @@
+### 1.6.0 (2021-Aug-16)
+
+* Ansible 4.4.0
+* tini 0.19.0
+* Use Dojo image scripts 0.10.3
+
 ### 1.5.0 (2020-Nov-08)
 
 * Ansible 2.10.3

@@ -1,7 +1,7 @@
 FROM debian:10.6-slim
 
 # Install image scripts and dojo
-ENV DOJO_VERSION=0.10.2
+ENV DOJO_VERSION=0.10.3
 RUN apt-get update && \
   DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends sudo git ca-certificates && \
   git clone --depth 1 -b ${DOJO_VERSION} https://github.com/kudulab/dojo.git /tmp/dojo_git &&\
@@ -9,7 +9,7 @@ RUN apt-get update && \
   rm -r /tmp/dojo_git &&\
   echo 'dojo ALL=(ALL) NOPASSWD: ALL' >> /etc/sudoers
 
-ENV TINI_VERSION v0.18.0
+ENV TINI_VERSION v0.19.0
 ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
 RUN mv /tini /usr/bin/tini && chmod +x /usr/bin/tini
 
@@ -45,7 +45,7 @@ RUN echo "===> Installing python, sudo, and supporting tools..."  && \
     \
     \
     echo "===> Installing Ansible..."   && \
-    pip3 install ansible==2.10.3         && \
+    pip3 install ansible==4.4.0         && \
     \
     \
     \
